@@ -5,10 +5,14 @@ import TypeNav from '@/components/TypeNav'
 //第一个参数：全局组件的名字，  第二个参数：哪一个组件
 Vue.component(TypeNav.name, TypeNav)
 // Vue.config.productionTip = false
+//引入mock数据
+import '@/mock/mockServe'
 //引入路由
 import router from '@/router'
 //引入仓库
 import store from '@/store'
+//引入swiper样式
+import 'swiper/css/swiper.css'
 //发请求还没做完，这里代理一直没有发挥作用，localhost
 // import {reqCategoryList} from '@/api'
 // reqCategoryList();

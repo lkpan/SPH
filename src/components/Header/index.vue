@@ -62,9 +62,14 @@ export default {
             // 第三种，对象
             //虽然路由中设置params可传可不传，但是不可为空字符串，
             // this.$router.push({name:'search',params:{keyword:''||undefined},query:{k:this.keyword.toUpperCase()}})
-            this.$router.push({name:'search',params:{keyword:this.keyword},query:{k:this.keyword.toUpperCase()}})
+            // this.$router.push({name:'search',params:{keyword:this.keyword},query:{k:this.keyword.toUpperCase()}})
             // this.$router.push({path:'/search',params:{keyword:this.keyword},query:{k:this.keyword.toUpperCase()}})
             // console.log(this);
+            if(this.$route.query){
+                let location = {name:'search', params:{keyword:this.keyword || undefined}}
+                location.query = this.$route.query
+                this.$router.push(location)
+            }
         }
     },
 }

@@ -2,10 +2,12 @@
   <div class="type-nav">
             <div class="container">
                 <!-- 事件委派，事件代理 -->
-                <div @mouseleave="leaveIndex">
+                <div @mouseleave="leaveShow" @mouseenter="enterShow">
                     <h2 class="all">全部商品分类</h2>  
+                    <!-- 过渡动画 -->
+                    <transition name="sort">
                     <!-- 三级联动 -->
-                    <div class="sort">
+                    <div class="sort" v-show="show">
                         <!-- 利用事件委派+编程式导航实现路由的跳转与传递参数 -->
                     <div class="all-sort-list2" @click="goSearch">
                         <div class="item" v-for="(c1, index) in categoryList" :key="c1.categoryId" :class="{cur:currentIndex===index}">
@@ -30,6 +32,7 @@
                         </div>
                     </div>
                     </div>
+                    </transition>
                 </div>
                 
                 <nav class="nav">
@@ -54,12 +57,16 @@ export default {
     data() {
         //存储用户鼠标移动到哪一个一级分类
         return {
-            currentIndex:-1
+            currentIndex:-1,
+            show:true
         }
     },
     mounted(){
-        //通知vuex发送请求获取数据，存储于仓库当中
-        this.$store.dispatch('categoryList')
+        //组件挂在完毕，让show的属性变为false
+        //如果不是Home路由组件，讲typeNav进行隐藏
+        if(this.$route.path!=='/home'){
+            this.show = false
+        }
     },
     computed:{
         //右侧需要的是一个函数，当使用这个计算属性的时候，右侧函数会立即执行一次
@@ -97,11 +104,28 @@ export default {
                 }else{
                     query.category3Id = category3id
                 }
-                //整理完参数
-                location.query = query
-                //跳转路由
-                this.$router.push(location)
+                //如果路由跳转时右param参数也要带过去
+                if(this.$route.params){
+                    location.params = this.$route.params
+                    //整理完参数
+                    location.query = query
+                    //跳转路由
+                    this.$router.push(location)
+                }
+                    
             }
+        },
+        //鼠标移入时让商品分类进行展示
+        enterShow(){
+            this.show = true
+        },
+        //当鼠标离开时，让商品分类进行隐藏
+        leaveShow(){
+            this.currentIndex = -1
+            if(this.$route.path !== '/home'){
+                this.show = false
+            }
+            
         }
     },
 }
@@ -221,6 +245,19 @@ export default {
                         background-color: skyblue;
                     }
                 }
+            }
+            //过渡动画样式
+            //过渡动画开始状态（进入）
+            .sort-enter{
+                height: 0;
+            }
+            //过渡动画结束状态（进入）
+            .sort-enter-to{
+                height: 461px;
+            }
+            //动画时间速率
+            .sort-enter-active{
+                transition: all .5s linear;
             }
         }
     }

@@ -6,7 +6,16 @@
                     <div class="swiper-container" id="mySwiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <img src="./images/banner1.jpg" />
+                                <img src="./images/banner1.jpg"/>
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="./images/banner2.jpg"/>
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="./images/banner3.jpg"/>
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="./images/banner4.jpg"/>
                             </div>
                         </div>
                         <!-- 如果需要分页器 -->
@@ -101,7 +110,36 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import Swiper from 'swiper'
 export default {
+mounted(){
+    console.log('list的mounted');
+    //派发action：通过vuex发起Ajax请求，将数据存储在仓库中
+    this.$store.dispatch('getBannerList')
+    //因为dispatch中涉及到异步语句，导致v-for遍历的时候还没有完全运行，因此不行
+    setTimeout(() => {
+        var mySwiper = new Swiper(document.querySelector('.swiper-container'), {
+            loop: true, // 循环模式选项
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+                clickable:true
+            },
+            
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        })
+    }, 0);
+},
+computed:{
+    ...mapState({
+        bannerList:state=>state.home.bannerList
+    })
+},
 
 }
 </script>

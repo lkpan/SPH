@@ -1,4 +1,4 @@
-import {reqCategoryList} from '@/api'
+import {reqCategoryList,reqGetBannerList} from '@/api'
 
 //home模块小仓库
 const state= {
@@ -9,6 +9,10 @@ const mutations= {
     CATEGORYLIST(state, categoryList){
         state.categoryList = categoryList
 
+    },
+    GETBANNERLIST(state,bannerList){
+        console.log('修改仓库数据');
+        state.bannerList = bannerList
     }
 }
 const actions= {
@@ -19,6 +23,14 @@ const actions= {
             commit('CATEGORYLIST', result.data)
         }
     
+    },
+    //获取首页轮播图数据
+    async getBannerList({commit}){
+        console.log('获取服务器数据');
+       let result = await reqGetBannerList()
+       if(result.code===200){
+        commit('GETBANNERLIST',result.data)
+       }
     }
 }
 const getters= {}

@@ -17,6 +17,11 @@ export default {
     Header,
     Footer
 
+  },
+  mounted(){
+        //通知vuex发送请求获取数据，存储于仓库当中
+        //派发一个action
+        this.$store.dispatch('categoryList')
   }
 }
 </script>
