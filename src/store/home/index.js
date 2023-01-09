@@ -3,7 +3,9 @@ import {reqCategoryList,reqGetBannerList} from '@/api'
 //home模块小仓库
 const state= {
     //state中的数据默认初始值要注意，如果返回的是对象想就设置为对象
-    categoryList:[]
+    categoryList:[],
+    // 轮播图的数据
+    bannerList:[]
 }
 const mutations= {
     CATEGORYLIST(state, categoryList){

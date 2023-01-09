@@ -5,17 +5,8 @@
                     <!--banner轮播-->
                     <div class="swiper-container" id="mySwiper">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <img src="./images/banner1.jpg"/>
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="./images/banner2.jpg"/>
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="./images/banner3.jpg"/>
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="./images/banner4.jpg"/>
+                            <div class="swiper-slide" v-for="carousel in bannerList" :key="carousel.id">
+                                <img :src="carousel.imgUrl"/>
                             </div>
                         </div>
                         <!-- 如果需要分页器 -->
@@ -118,8 +109,24 @@ mounted(){
     //派发action：通过vuex发起Ajax请求，将数据存储在仓库中
     this.$store.dispatch('getBannerList')
     //因为dispatch中涉及到异步语句，导致v-for遍历的时候还没有完全运行，因此不行
-    setTimeout(() => {
-        var mySwiper = new Swiper(document.querySelector('.swiper-container'), {
+},
+computed:{
+    ...mapState({
+        bannerList:state=>state.home.bannerList
+    })
+},
+watch:{
+    //监听bannerList数据的变化，因为这条数据发生过变化，---由空数组变为里面有四个元素
+    bannerList:{
+        //使用对象写法需要handler
+        handler(newValue,oldValue){
+            console.log('监听');
+            //现在通过watch监听bannerList属性的属性值变化
+            //如果执行handler方法，代表组件实例身上这个属性已经有了【数组：四个元素】
+            //这个时候bannerList数据已经有了，但是v-for不一定执行完成
+            this.$nextTick(()=>{
+                //当执行这个回调的时候，保证服务器数据回来了，v-for执行完毕
+                var mySwiper = new Swiper(document.querySelector('.swiper-container'), {
             loop: true, // 循环模式选项
             // 如果需要分页器
             pagination: {
@@ -133,13 +140,10 @@ mounted(){
                 prevEl: '.swiper-button-prev',
             },
         })
-    }, 0);
-},
-computed:{
-    ...mapState({
-        bannerList:state=>state.home.bannerList
-    })
-},
+        })
+        }
+    }
+}   
 
 }
 </script>
