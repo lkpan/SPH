@@ -8,3 +8,6 @@ import mockRequests from './mockAjax'
 export const reqCategoryList = ()=>requests.get('/product/getBaseCategoryList')
 export const reqGetBannerList = ()=>mockRequests.get('/banner')
 
+
+//获取floor数据
+export const reqFloorList = ()=>mockRequests.get('/floor')  

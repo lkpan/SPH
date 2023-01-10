@@ -3,7 +3,7 @@
             <div class="sortList clearfix">
                 <div class="center">
                     <!--banner轮播-->
-                    <div class="swiper-container" id="mySwiper">
+                    <div class="swiper-container" ref="mySwiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide" v-for="carousel in bannerList" :key="carousel.id">
                                 <img :src="carousel.imgUrl"/>
@@ -105,7 +105,6 @@ import { mapState } from 'vuex'
 import Swiper from 'swiper'
 export default {
 mounted(){
-    console.log('list的mounted');
     //派发action：通过vuex发起Ajax请求，将数据存储在仓库中
     this.$store.dispatch('getBannerList')
     //因为dispatch中涉及到异步语句，导致v-for遍历的时候还没有完全运行，因此不行
@@ -120,13 +119,12 @@ watch:{
     bannerList:{
         //使用对象写法需要handler
         handler(newValue,oldValue){
-            console.log('监听');
             //现在通过watch监听bannerList属性的属性值变化
             //如果执行handler方法，代表组件实例身上这个属性已经有了【数组：四个元素】
             //这个时候bannerList数据已经有了，但是v-for不一定执行完成
             this.$nextTick(()=>{
                 //当执行这个回调的时候，保证服务器数据回来了，v-for执行完毕
-                var mySwiper = new Swiper(document.querySelector('.swiper-container'), {
+                var mySwiper = new Swiper(this.$refs.mySwiper, {
             loop: true, // 循环模式选项
             // 如果需要分页器
             pagination: {
