@@ -3,19 +3,7 @@
             <div class="sortList clearfix">
                 <div class="center">
                     <!--banner轮播-->
-                    <div class="swiper-container" ref="mySwiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide" v-for="carousel in bannerList" :key="carousel.id">
-                                <img :src="carousel.imgUrl"/>
-                            </div>
-                        </div>
-                        <!-- 如果需要分页器 -->
-                        <div class="swiper-pagination"></div>
-
-                        <!-- 如果需要导航按钮 -->
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    </div>
+                    <Carousel :list="bannerList"/>
                 </div>
                 <div class="right">
                     <div class="news">
@@ -124,7 +112,7 @@ watch:{
             //这个时候bannerList数据已经有了，但是v-for不一定执行完成
             this.$nextTick(()=>{
                 //当执行这个回调的时候，保证服务器数据回来了，v-for执行完毕
-                var mySwiper = new Swiper(this.$refs.mySwiper, {
+                var mySwiper = new Swiper(this.$refs.cur, {
             loop: true, // 循环模式选项
             // 如果需要分页器
             pagination: {

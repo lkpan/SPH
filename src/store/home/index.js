@@ -19,7 +19,6 @@ const mutations= {
         state.bannerList = bannerList
     },
     GETFLOORLIST(state,floorList){
-        console.log('修改floorList');
         state.floorList = floorList
     }
 }
@@ -41,7 +40,6 @@ const actions= {
     },
     //获取floor数据
     async getFloorList({commit}){
-        console.log(reqFloorList,reqGetBannerList);
         let result = await reqFloorList()
         if(result.code===200){
          commit('GETFLOORLIST',result.data)
