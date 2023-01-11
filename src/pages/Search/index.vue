@@ -83,35 +83,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :totle="totle" :continues="5" @getPageNo="getPageNo"/>
         </div>
       </div>
     </div>
@@ -120,7 +92,7 @@
 
 <script>
 import SearchSelector from "./SearchSelector/SearchSelector";
-import { mapGetters } from "vuex";
+import { mapGetters , mapState} from "vuex";
 export default {
   data() {
     return {
@@ -139,7 +111,7 @@ export default {
         // 分页器 ，当前页
         pageNo: 1,
         // 每一页展示数据个数
-        pageSize: 10,
+        pageSize: 3,
         // 平台售卖的参数
         props: [],
         // 品牌
@@ -163,6 +135,11 @@ export default {
   computed: {
     // mapGetters：数组写法，没有划分模块【home，search】
     ...mapGetters(["goodsList"]),
+  // 获取search模块一共多少条数据
+    ...mapState({
+      totle:state=>state.search.searchList.total
+    })
+    ,
     // 判断active显示位置
     isOne(){
       return this.searchParams.order.indexOf('1') != -1
@@ -252,6 +229,12 @@ export default {
         newOrder = `${flag}:${'desc'}`
       }
       this.searchParams.order = newOrder
+      this.getData()
+    },
+    // 自定义回调，获取当前是第几页
+    getPageNo(pageNo){
+      this.searchParams.pageNo = pageNo
+      // 再次发请求
       this.getData()
     }
     
