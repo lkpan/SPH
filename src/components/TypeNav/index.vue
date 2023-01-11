@@ -88,7 +88,6 @@ export default {
         //路由跳转方法
         goSearch(event){
             let element = event.target
-            console.log(element.dataset);
             let {categoryname,category1id,category2id,category3id} = element.dataset
             //如果标签身上拥有category一定是a标签
             if (categoryname){
