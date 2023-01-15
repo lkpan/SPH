@@ -16,3 +16,6 @@ export const reqFloorList = ()=>mockRequests.get('/floor')
 
 // 当前这个函数需要接受外部传参
 export const reqGetSearchInfo = (params)=>requests({url:'/list',method:'post',data:params})
+
+//获取产品详情信息的接口 /api/item/{ skuId } get请求
+export const reqGoodsInfo = (skuId)=>requests({url:`/item/${skuId}`,method:'get'})

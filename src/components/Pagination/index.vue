@@ -3,7 +3,7 @@
     <button :disabled="pageNo===1" @click="$emit('getPageNo',pageNo-1)">上一页</button>
     <button v-show="startNumAndEndNum.start!==1" @click="$emit('getPageNo',1)">1</button>
     <button v-show="startNumAndEndNum.start>2" @click="$emit('getPageNo',pageNo-5)">···</button>
-
+    <!-- 连续部分 -->
     <button v-for="(page,index) in startNumAndEndNum.end" :key="index" v-show="page>=startNumAndEndNum.start" @click="$emit('getPageNo',page)" :class="{active:pageNo==page}">{{page}}</button>
 
     <button v-show="totlePage-startNumAndEndNum.end>1" @click="$emit('getPageNo',pageNo+5)">···</button>
@@ -21,6 +21,7 @@ export default {
   name: "Pagination",
   props:['continues','totle','pageSize','pageNo'],
   computed:{
+    // 总页数
     totlePage(){
         return Math.ceil(this.totle/this.pageSize)
     },
@@ -28,7 +29,7 @@ export default {
         // 先定义两个变量存储起始数字与结束数字
         let start = 0, end = 0
         // 连续页码数字5，不够5页属于不支持现象
-        if(this.continues>this.totle){
+        if(this.continues>this.totlePage){
             start = 1
             end = this.totlePage
         }else{
