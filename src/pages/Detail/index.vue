@@ -99,12 +99,23 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum"/>
+                <input
+                  autocomplete="off"
+                  class="itxt"
+                  v-model="skuNum"
+                  @change="changeSkuNum"
+                />
                 <a href="javascript:" class="plus" @click="skuNum++">+</a>
-                <a href="javascript:" class="mins" @click="skuNum>1?skuNum--:skuNum=1" >-</a>
+                <a
+                  href="javascript:"
+                  class="mins"
+                  @click="skuNum > 1 ? skuNum-- : (skuNum = 1)"
+                  >-</a
+                >
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <!-- 以前路由跳转单纯路由之间的跳转，现在在跳转之前需要发请求 -->
+                <a href="javascript:" @click="addShopcar">加入购物车</a>
               </div>
             </div>
           </div>
@@ -352,8 +363,8 @@ export default {
   data() {
     return {
       // 购买产品个数
-      skuNum:1
-    }
+      skuNum: 1,
+    };
   },
   components: {
     ImageList,
@@ -371,25 +382,41 @@ export default {
     },
   },
   methods: {
-    changeIsChecked(saleAttrValue,arr) {
+    changeIsChecked(saleAttrValue, arr) {
       // 排他思想，只让点击的按钮高亮
-      arr.forEach(item => {
-        item.isChecked = 0
+      arr.forEach((item) => {
+        item.isChecked = 0;
       });
-      saleAttrValue.isChecked = 1
+      saleAttrValue.isChecked = 1;
     },
     // 表单元素修改产品个数
-    changeSkuNum(event){
-      let value = event.target.value * 1
+    changeSkuNum(event) {
+      let value = event.target.value * 1;
       // 输入非法数据
-      if(isNaN(value)||value<1){
-        this.skuNum = 1
-      }else{
-        this.skuNum = parseInt(value)
+      if (isNaN(value) || value < 1) {
+        this.skuNum = 1;
+      } else {
+        this.skuNum = parseInt(value);
       }
-    }
+    },
+    async addShopcar() {
+      // 1.发请求--将产品加入到数据库（通知服务器）
+      // 2.服务器储存成功
+      // 3.失败：给用户进行提示
+      try {
+        await this.$store.dispatch("addOrUpdateShopCart", {
+          skuId: this.$route.params.skuId,
+          skuNum: this.skuNum,
+        });
+        // 路由跳转
+        // 简单数据可以直接通过query直接传参，复杂的可以用绘画储存
+        sessionStorage.setItem('skuInfo',JSON.stringify(this.skuInfo))
+        this.$router.push({name:'addCartSuccess',query:{skuNum:this.skuNum}})
+      } catch (error) {
+        alert(error.message);
+      }
+    },
   },
-  
 };
 </script>
 

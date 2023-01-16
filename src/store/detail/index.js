@@ -1,4 +1,4 @@
-import {reqGoodsInfo} from '@/api/index'
+import {reqGoodsInfo,reqAddOrUpdateShopCart} from '@/api/index'
 const state = {
     goodsInfo:{}
 }
@@ -14,6 +14,19 @@ const actions = {
         if (result.code==200){
             commit('GETGOODSINFO',result.data)
         }
+    },
+    // 将产品添加到购物车中
+    async addOrUpdateShopCart({commit},{skuId,skuNum}){
+    //    这里只需要判断是否成功，没有返回数据
+    // 返回的数据是Promise
+    let result = await reqAddOrUpdateShopCart(skuId,skuNum)
+    // 代表服务器加入购物车成功
+    if(result.code==200){
+        return 'ok'
+    }else{
+        // 代表加入购物车失败
+        return Promise.reject(new Error('Faile'))
+    }
     }
 }
 const getters = {
