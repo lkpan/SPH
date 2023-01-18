@@ -50,7 +50,7 @@ export default [
         meta: { show: false }
     },
     {
-        path:'/addCartSuccess:skuNum',
+        path:'/addCartSuccess:skuNum?',
         name:'addCartSuccess',
         component:AddCartSuccess,
         meta: { show: true }
