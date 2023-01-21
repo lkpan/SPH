@@ -78,7 +78,7 @@
       </div>
       <div class="money-box">
         <div class="chosed">
-          已选择 <span>{{ totalPrice }}</span
+          已选择 <span>{{ totalChecked }}</span
           >件商品
         </div>
         <div class="sumprice">
@@ -213,6 +213,9 @@ export default {
       // every只要有一个为假就全部为假
       return this.cartInfoList.every((item) => item.isChecked == '1')
     },
+    totalChecked(){
+      return this.cartInfoList.filter(item=>item.isChecked=='1').length
+    }
   },
 };
 </script>

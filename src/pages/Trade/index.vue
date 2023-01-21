@@ -79,7 +79,10 @@
     <div class="money clearFix">
       <ul>
         <li>
-          <b><i>{{orderInfo.totalNum}}</i>件商品，总商品金额</b>
+          <b
+            ><i>{{ orderInfo.totalNum }}</i
+            >件商品，总商品金额</b
+          >
           <span>¥{{ orderInfo.totalAmount }}.00</span>
         </li>
         <li>
@@ -93,7 +96,9 @@
       </ul>
     </div>
     <div class="trade">
-      <div class="price">应付金额:　<span>¥{{ orderInfo.totalAmount }}.00</span></div>
+      <div class="price">
+        应付金额:　<span>¥{{ orderInfo.totalAmount }}.00</span>
+      </div>
       <div class="receiveInfo">
         寄送至:
         <span>{{ userDefaultAddress.fullAddress }}</span>
@@ -102,7 +107,8 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <!-- <router-link class="subBtn" to="/pay" >提交订单</router-link> -->
+      <a class="subBtn" @click="submitOrder">提交订单</a>
     </div>
   </div>
 </template>
@@ -115,6 +121,8 @@ export default {
     return {
       // 手机买家留言信息
       buyerMessage: "",
+      // 订单号
+      orderId: "",
     };
   },
   mounted() {
@@ -133,12 +141,37 @@ export default {
     },
   },
   methods: {
+    // 修改默认地址
     changeDefault(address, addressInfo) {
       //  全部的isDfault为0
       addressInfo.forEach((item) => {
         item.isDefault = "0";
       });
       address.isDefault = "1";
+    },
+    // 提交订单
+    async submitOrder() {
+      let { tradeNo } = this.orderInfo;
+      let data = {
+        consignee: this.userDefaultAddress.consignee, //最终收件人名字
+        consigneeTel: this.userDefaultAddress.phoneNum, //最终收件人号码
+        deliveryAddress: this.userDefaultAddress.fullAddress, //最终收件人地址
+        paymentWay: "ONLINE", // 支付方式
+        orderComment: this.msg, // 留言信息
+        orderDetailList: this.orderInfo.detailArrayList, //商品清单
+      };
+
+      // 需要带参数
+      let result = await this.$API.reqSubmitOrder(tradeNo, data);
+      // 提交订单成功
+      if (result.code == "200") {
+        this.orderId = result.data;
+        // 路由跳转
+        this.$router.push('/pay?orderId='+this.orderId)
+        // 提交订单失败
+      } else {
+        alert(result.data);
+      }
     },
   },
 };
