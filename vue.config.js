@@ -3,6 +3,7 @@
   // transpileDependencies: true,
   //代理跨域
   module.exports = {
+    productionSourceMap:false,
     lintOnSave : false,
     //...
     devServer: {

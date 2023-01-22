@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <h1 v-upper="msg">abc</h1>
     <Header></Header>
     <!-- 路由组件出口的地方 -->
     <router-view></router-view>
@@ -13,6 +14,11 @@ import Header from './components/Header/index'
 import Footer from './components/Footer/index'
 export default {
   name: 'App',
+  data() {
+    return {
+      msg:'abc'
+    }
+  },
   components: {
     Header,
     Footer

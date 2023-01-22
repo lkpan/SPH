@@ -89,10 +89,14 @@ export default {
     async userLogin() {
       try {
         const { phone, password } = this;
+        // 输入了号码，密码且请求成功再跳转
         phone &&
           password &&
-          (await this.$store.dispatch("userLogin", { phone, password })) && 
-          this.$router.push("/home");
+          (await this.$store.dispatch("userLogin", { phone, password })); 
+          // 跳转到home首页
+          // 看是否携带query参数，有就跳到指定路由
+          let toPath = this.$route.query.redirect||'/home'
+          this.$router.push(toPath);
       } catch (error) {
         alert(error.message);
       }

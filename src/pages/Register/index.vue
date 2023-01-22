@@ -10,12 +10,24 @@
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="phone" />
-        <span class="error-msg">错误提示信息</span>
+        <input
+          placeholder="请输入你的手机号"
+          v-model="phone"
+          name="phone"
+          v-validate="{ required: true, regex: /^1\d{10}$/ }"
+          :class="{ invalid: errors.has('phone') }"
+        />
+        <span class="error-msg">{{ errors.first("phone") }}</span>
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" v-model="code" />
+        <input
+          placeholder="请输入验证码"
+          v-model="code"
+          name="code"
+          v-validate="{ required: true, regex: /^[0-9]*$/}"
+          :class="{ invalid: errors.has('code') }"
+        />
 
         <button type="button" class="btn btn-default" @click="getCode">
           获取验证码
@@ -23,26 +35,41 @@
 
         <!-- <button>获取验证码</button> -->
         <!-- <img ref="code" src="http://182.92.128.115/api/user/passport/code" alt="code"> -->
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first("code") }}</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
         <input
-          type="text"
-          placeholder="请输入你的登录密码"
+          placeholder="请输入你的密码"
           v-model="password"
+          name="password"
+          v-validate="{ required: true, regex: /^[0-9]{6,18}$/ }"
+          :class="{ invalid: errors.has('password') }"
         />
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first("password") }}</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码" v-model="password1" />
-        <span class="error-msg">错误提示信息</span>
+        <input
+          placeholder="请确认你的密码"
+          v-model="password1"
+          name="password1"
+          v-validate="{ required: true, is: password }"
+          :class="{ invalid: errors.has('password1') }"
+        />
+        <span class="error-msg">{{ errors.first("password1") }}</span>
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" :checked="agree" />
+        <input
+        type="checkbox"
+          placeholder="请输入你的密码"
+          v-model="agree"
+          name="agree"
+          v-validate="{ agree:true }"
+          :class="{ invalid: errors.has('agree') }"
+        />
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first('agree') }}</span>
       </div>
       <div class="btn">
         <button @click="userRegister">完成注册</button>
@@ -96,23 +123,23 @@ export default {
         // 将组件的code属性值变为仓库中验证码(为了方便这里让验证码自己填写)
         this.code = this.$store.state.user.code;
       } catch (error) {
-        alert(error.message)
+        alert(error.message);
       }
     },
     // 用户注册
     async userRegister() {
-      try {
+      // 所有表单验证成功发请求
+      const success = await this.$validator.validateAll()
+      if(success){
+        try {
         // 如果成功，路由跳转
         const { phone, code, password, password1 } = this;
-        phone &&
-          code &&
-          password == password1 &&
-          (await this.$store.dispatch("userRegister", {
+        await this.$store.dispatch("userRegister", {
             phone,
             code,
             password,
-          }));
-          // 判断是否注册成功
+          })
+        // 判断是否注册成功
         if (this.pushCode == 200) {
           this.$router.push("/login");
         } else {
@@ -120,6 +147,7 @@ export default {
         }
       } catch (error) {
         alert(error.message);
+      }
       }
     },
   },

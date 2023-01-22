@@ -48,6 +48,7 @@
               style="width: 160px; height: 160px"
             />
           </li>
+          
           <li>
             <p>
               {{ order.skuName }}

@@ -1,5 +1,4 @@
 //引入路由
-import Home from '@/pages/Home'
 import Search from '@/pages/Search'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
@@ -9,11 +8,18 @@ import ShopCart from '@/pages/ShopCart'
 import Trade from '@/pages/Trade'
 import Pay from '@/pages/Pay'
 import PaySuccess from '@/pages/PaySuccess'
+import Center from '@/pages/Center'
+
+// 引入二级路由
+import MyOrder from '@/pages/Center/myOrder'
+import GroupOrder from '@/pages/Center/groupOrder'
+
+// 路由懒加载
 
 export default [
     {
         path: '/home',
-        component: Home,
+        component: ()=>import('@/pages/Home'),
         meta: { show: true }
     },
     {
@@ -48,39 +54,77 @@ export default [
         redirect: '/home'
     },
     {
-        path:'/detail/:skuId',
-        component:Detail,
+        path: '/detail/:skuId',
+        component: Detail,
         meta: { show: false }
     },
     {
-        path:'/addCartSuccess:skuNum?',
-        name:'addCartSuccess',
-        component:AddCartSuccess,
+        path: '/addCartSuccess:skuNum?',
+        name: 'addCartSuccess',
+        component: AddCartSuccess,
         meta: { show: true }
     },
     {
-        path:'/shopCart',
-        name:'shopCart',
-        component:ShopCart,
+        path: '/shopCart',
+        name: 'shopCart',
+        component: ShopCart,
         meta: { show: true }
     },
     {
-        path:'/trade',
-        name:'trade',
-        component:Trade,
+        path: '/trade',
+        name: 'trade',
+        component: Trade,
+        meta: { show: true },
+        // 独享路由守卫
+        beforeEnter: (to, from, next) => {
+            if(from.path=='/shopCart'||'/trade'){
+                next()
+            }else{
+                next(false)
+            }
+        }
+    },
+    {
+        path: '/pay',
+        name: 'pay',
+        component: Pay,
+        meta: { show: true },
+        beforeEnter: (to, from, next) => {
+            if(from.path=='/trade'||'/pay'){
+                next()
+            }else{
+                next(false)
+            }
+        }
+    },
+    {
+        path: '/paySuccess',
+        name: 'paySuccess',
+        component: PaySuccess,
         meta: { show: true }
     },
     {
-        path:'/pay',
-        name:'pay',
-        component:Pay,
-        meta: { show: true }
-    },
-    {
-        path:'/paySuccess',
-        name:'paySuccess',
-        component:PaySuccess,
-        meta: { show: true }
+        path: '/center',
+        name: 'center',
+        component: Center,
+        meta: { show: true },
+        // 二级路由
+        children: [
+            {
+                path: 'myorder',
+                component: MyOrder
+            },
+            {
+                path: 'grouporder',
+                component: GroupOrder
+            },
+            // 
+            {
+                path: '/center',
+                redirect: '/center/myorder'
+            }
+
+        ]
     },
 
 

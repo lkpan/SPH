@@ -70,8 +70,17 @@ router.beforeEach(async (to, from, next) => {
             }
         }
     } else {
-        // 未登录::暂未处理
-        next()
+        // 未登录:不能去支付相关【pay|paySuccess】、个人中心
+        // 需要去登录页面
+        let toPath = to.path
+        if(toPath.includes('/trade')|| toPath.includes('/pay')||toPath.includes('/center')){
+            // 把未登录的时候想去而没去的地方存储于地址栏
+            next('/login?redirect='+toPath)
+        }else{
+            // 不是去这些。放行
+            next()
+        }
+
     }
 })
 

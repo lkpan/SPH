@@ -5,6 +5,7 @@ import TypeNav from '@/components/TypeNav'
 import Carousel from '@/components/Carousel'
 // 分页器
 import Pagination from '@/components/Pagination'
+
 // elementui引入部分组件
 import { Button, MessageBox } from 'element-ui';
 //第一个参数：全局组件的名字，  第二个参数：哪一个组件
@@ -12,9 +13,9 @@ Vue.component(TypeNav.name, TypeNav)
 //轮播图全局组件
 Vue.component(Carousel.name, Carousel)
 // 分页器的
-Vue.component(Pagination.name,Pagination)
+Vue.component(Pagination.name, Pagination)
 // elementui注册全局组件
-Vue.component(Button.name,Button)
+Vue.component(Button.name, Button)
 // elementui还有一种方法，挂在原型上
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
@@ -33,6 +34,24 @@ import 'swiper/css/swiper.css'
 // reqCategoryList();
 // 统一接口api文件里面的请求函数
 import * as API from '@/api'
+// 图片懒加载vue-lazyload
+import VueLazyload from 'vue-lazyload'
+import kunkun from '@/assets/images/1.gif'
+
+
+// 引入自定义插件
+import myPlugins from '@/plugins/myPlugins'
+
+Vue.use(myPlugins,{
+  name:'upper'
+})
+// 图片懒加载
+Vue.use(VueLazyload, {
+  // 加载的默认图片
+  loading: kunkun
+})
+// 引入表单校验插件
+import '@/plugins/validate'
 new Vue({
   render: h => h(App),
   //注册路由信息：组件身上都会多出$route以及$router属性
@@ -40,7 +59,7 @@ new Vue({
   //注册仓库：组件实例身上会多一个$store属性
   store,
   // 全局事件总线
-  beforeCreate(){
+  beforeCreate() {
     Vue.prototype.$bus = this;
     Vue.prototype.$API = API;
   }
